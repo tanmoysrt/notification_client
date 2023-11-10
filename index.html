@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    Messages <hr>
+    <span id="id"></span><hr>
+    <button onclick="subscribe()">Subscribe</button>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+    <script src="/frappe-notification.js"></script>
+    <script>
+      const notification = new FrappeNotification("eaec6ca60b", "social-media-app", function (payload){
+        let msg = payload.notification.title + "\n" + payload.notification.body + "\n -- test from main page";
+        alert(msg);
+      });
+      notification.init()
+      .then(() => {
+        console.log("Notification initialized");
+        notification.startMessageListener();
+      })
+
+      async function subscribe(){
+        const token = await notification.subscribe();
+        document.getElementById("id").innerHTML = token;
+      }
+    </script>
+  </body>
+</html>
