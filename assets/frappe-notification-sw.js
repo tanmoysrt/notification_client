@@ -7,8 +7,6 @@ if ('function' === typeof importScripts) {
 
     self.addEventListener('install', event => {
         const jsonConfig = new URL(location).searchParams.get('config');
-        console.log('installing service worker');
-        console.log(jsonConfig);
         setup(JSON.parse(jsonConfig));
     });
 

@@ -7,6 +7,7 @@ class FrappeNotification {
         this.project_id = project_id;
         this.app_name = app_name;
         this.token = null;
+        this.messaging = null;
         if (messageHandler != null) {
             this.onMessage = messageHandler;
         } else {
@@ -20,25 +21,19 @@ class FrappeNotification {
         const config = await this.fetchConfig(this.project_id, this.app_name);
         // encode config to pass to service worker
         const encodeConfig = encodeURIComponent(JSON.stringify(config));
-        const serviceWorkerURL = `/firebase-messaging-sw.js?config=${encodeConfig}`;
+        const serviceWorkerURL = `/assets/frappe-notification-sw.js?config=${encodeConfig}`;
         // register service worker
         if ("serviceWorker" in navigator) {
-            navigator.serviceWorker
-                .register(serviceWorkerURL)
-                .then(function (registration) {
-                    console.log(
-                        "SW registration succeeded with scope:",
-                        registration.scope
-                    );
-                })
-                .catch(function (e) {
-                    console.log("SW registration failed with error:", e);
-                });
+            const registration = await navigator.serviceWorker.register(serviceWorkerURL);
+            console.log("SW registered:", registration);
+            // initialize firebase
+            firebase.initializeApp(config);
+            // initialize messaging
+            this.messaging = firebase.messaging();
+            this.messaging.useServiceWorker(registration);
+            this.messaging.onMessage(this.onMessage);
         }
-        // inititalize firebase
-        firebase.initializeApp(config);
-        // initialize messaging
-        this.startMessageListener();
+
     }
 
     // Fetch web config from relay server
@@ -49,18 +44,14 @@ class FrappeNotification {
         return data;
     }
 
-    // Start message listener
-    startMessageListener() {
-        const messaging = firebase.messaging();
-        messaging.onMessage(this.onMessage);
-    }
-
     // Subscribe to notification
     subscribe() {
-        const messaging = firebase.messaging();
-        return messaging.requestPermission().then(() => {
+        if (this.messaging == null) {
+            return null;
+        }
+        return this.messaging.requestPermission().then(() => {
             console.log("Notification permission granted.");
-            return messaging.getToken();
+            return this.messaging.getToken();
         }).then((token) => {
             this.token = token;
             return token;
