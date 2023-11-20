@@ -3,8 +3,8 @@ class FrappeNotification {
     static relayServerBaseURL = 'http://notification.relay:8000';
 
     // Constructor
-    constructor(project_id, app_name, messageHandler) {
-        this.project_id = project_id;
+    constructor(project_name, app_name, messageHandler) {
+        this.project_name = project_name;
         this.app_name = app_name;
         this.token = null;
         this.messaging = null;
@@ -18,7 +18,7 @@ class FrappeNotification {
     // Setup notification service
     async init() {
         // fetch web config
-        const config = await this.fetchConfig(this.project_id, this.app_name);
+        const config = await this.fetchConfig(this.project_name, this.app_name);
         // encode config to pass to service worker
         const encodeConfig = encodeURIComponent(JSON.stringify(config));
         const serviceWorkerURL = `/assets/frappe-notification-sw.js?config=${encodeConfig}`;
@@ -37,8 +37,8 @@ class FrappeNotification {
     }
 
     // Fetch web config from relay server
-    async fetchConfig(project_id, app_name) {
-        let url = `${FrappeNotification.relayServerBaseURL}/api/method/notification_relay.api.web.config?project_id=${project_id}&app_name=${app_name}`
+    async fetchConfig(project_name, app_name) {
+        let url = `${FrappeNotification.relayServerBaseURL}/api/method/notification_relay.api.web.config?project_name=${project_name}&app_name=${app_name}`
         let response = await fetch(url);
         let data = await response.json();
         return data;
