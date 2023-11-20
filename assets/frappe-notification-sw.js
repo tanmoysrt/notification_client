@@ -1,6 +1,6 @@
 // It's required to keep the file in the root directory of your web app.
 if ('function' === typeof importScripts) {
-    const firebaseVersion = '8.10.1';
+    const firebaseVersion = '8.2.4';
 
     importScripts("https://www.gstatic.com/firebasejs/" + firebaseVersion + "/firebase-app.js");
     importScripts("https://www.gstatic.com/firebasejs/" + firebaseVersion + "/firebase-messaging.js");
