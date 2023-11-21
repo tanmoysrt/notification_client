@@ -10,12 +10,12 @@
     <span id="id"></span><hr>
     <button onclick="subscribe()">Subscribe</button>
     <!-- Below scripts required -->
-    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.2.4/firebase-messaging.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
     <script src="/assets/frappe-notification.js"></script>
     <script>
       const notification = new FrappeNotification("test-abc", "web-chat", function (payload){
-        let msg = payload.notification.title + "\n" + payload.notification.body + "\n -- test from main page";
+        let msg = payload.data.title + "\n" + payload.data.body + "\n -- test from main page";
         alert(msg);
       });
       

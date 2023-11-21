@@ -28,12 +28,13 @@ class FrappeNotification {
             console.log("SW registered:", registration);
             // initialize firebase
             firebase.initializeApp(config);
-            // initialize messaging
+            // // initialize messaging
             this.messaging = firebase.messaging();
             this.messaging.useServiceWorker(registration);
             this.messaging.onMessage(this.onMessage);
         }
 
+ 
     }
 
     // Fetch web config from relay server

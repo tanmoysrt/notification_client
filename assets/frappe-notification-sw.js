@@ -1,14 +1,14 @@
 // It's required to keep the file in the root directory of your web app.
 if ('function' === typeof importScripts) {
-    const firebaseVersion = '8.2.4';
+    const firebaseVersion = '8.10.1';
 
     importScripts("https://www.gstatic.com/firebasejs/" + firebaseVersion + "/firebase-app.js");
     importScripts("https://www.gstatic.com/firebasejs/" + firebaseVersion + "/firebase-messaging.js");
 
-    self.addEventListener('install', event => {
-        const jsonConfig = new URL(location).searchParams.get('config');
-        setup(JSON.parse(jsonConfig));
-    });
+    // self.addEventListener('install', event => {
+    const jsonConfig = new URL(location).searchParams.get('config');
+    setup(JSON.parse(jsonConfig));
+    // });
 
     // Setup firebase messaging
     function setup(config) {
@@ -19,9 +19,9 @@ if ('function' === typeof importScripts) {
 
         messaging.onBackgroundMessage(function(payload) {
             console.log('[firebase-messaging-sw.js] Received background message ', payload);
-            const notificationTitle = payload.notification.title;
+            const notificationTitle = payload.data.title;
             const notificationOptions = {
-                body: payload.notification.body,
+                body: payload.data.body || ''
             };
             self.registration.showNotification(notificationTitle, notificationOptions);
         });
